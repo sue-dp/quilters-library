@@ -3,6 +3,8 @@ from sqlalchemy.dialects.postgresql import UUID
 import marshmallow as ma
 
 from db import db
+from .roles_orgs_xref import roles_orgs_xref
+from .users_roles_xref import users_roles_xref
 
 
 class Roles(db.Model):

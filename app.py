@@ -2,7 +2,7 @@ from flask import Flask
 import psycopg2
 
 from db import *
-from util.blueprints import register_blueprints
+# from util.blueprints import register_blueprints
 
 
 app = Flask(__name__)
@@ -26,7 +26,7 @@ def create_tables():
         print('tables created successfuly')
 
 
-register_blueprints(app)
+# register_blueprints(app)
 
 if __name__ == '__main__':
     create_all()

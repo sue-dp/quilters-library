@@ -3,7 +3,8 @@ from sqlalchemy.dialects.postgresql import UUID
 import marshmallow as ma
 
 from db import db
-from models.users_roles_xref import users_roles_xref
+from .users_roles_xref import users_roles_xref
+from .users_orgs_xref import users_orgs_xref
 
 
 class Users(db.Model):
@@ -19,6 +20,8 @@ class Users(db.Model):
     roles = db.relationship('Roles', secondary=users_roles_xref, back_populates='users')
     organizations = db.relationship('Organizations', secondary=users_orgs_xref, back_populates='users')
     auth = db.relationship('AuthTokens', back_populates='user')
+    quilts = db.relationship('Quilts', back_populates='user')
+    images = db.relationship('Images', back_populates='uploader')
 
     def __init__(self, first_name, last_name, email, password, active=True):
         self.first_name = first_name
@@ -37,6 +40,8 @@ class UsersSchema(ma.Schema):
 
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
     organizations = ma.fields.Nested('OrganizationsSchema', many=True, exclude=['users'])
+    quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
+    images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
 
 
 user_schema = UsersSchema()

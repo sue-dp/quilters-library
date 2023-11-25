@@ -3,6 +3,8 @@ from sqlalchemy.dialects.postgresql import UUID
 import marshmallow as ma
 
 from db import db
+from .users_orgs_xref import users_orgs_xref
+from .roles_orgs_xref import roles_orgs_xref
 
 
 class Organizations(db.Model):
@@ -15,13 +17,13 @@ class Organizations(db.Model):
     users = db.relationship('Users', secondary=users_orgs_xref, back_populates='organizations')
     roles = db.relationship('Roles', secondary=roles_orgs_xref, back_populates='organizations')
 
-    def __init__(self, org_name, active)
+    def __init__(self, org_name, active):
         self.org_name = org_name
         self.active = active
 
     def get_new_organization():
         return Organizations('', True)
-    
+
 
 class OrganizationsSchema(ma.Schema):
     class Meta:
