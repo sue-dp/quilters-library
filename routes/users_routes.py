@@ -22,7 +22,7 @@ def user_get_by_id(user_id):
 
 
 @users.route('/users/<org_id>', methods=['GET'])
-def users_get_byorg__id(org_id):
+def users_get_by_org__id(org_id):
     return controllers.user_get_by_org_id(request, org_id)
 
 
