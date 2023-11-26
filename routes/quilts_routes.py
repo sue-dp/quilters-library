@@ -36,6 +36,11 @@ def quilt_update(quilt_id):
     return controllers.quilt_update(request, quilt_id)
 
 
+@quilts.route('/quilt/public/<quilt_id>', methods=['PATCH'])
+def quilt_public(quilt_id):
+    return controllers.quilt_public(request, quilt_id)
+
+
 @quilts.route('/quilt/activity/<quilt_id>', methods=['PATCH'])
 def quilt_activity(quilt_id):
     return controllers.quilt_activity(request, quilt_id)
@@ -44,3 +49,8 @@ def quilt_activity(quilt_id):
 @quilts.route('/quilt/image-add/<quilt_id>', methods=['POST'])
 def quilt_add_image(quilt_id):
     return controllers.quilt_add_image(request, quilt_id)
+
+
+@quilts.route('/quilt/image-remove/<quilt_id>', methods=['POST'])
+def quilt_remove_image(quilt_id):
+    return controllers.quilt_remove_image(request, quilt_id)
