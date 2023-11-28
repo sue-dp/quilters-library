@@ -44,6 +44,8 @@ def auth_token_add(req):
     new_token = AuthTokens(user_data.user_id, expiry)
 
     db.session.add(new_token)
+
     db.session.commit()
+    print("new_token: ", new_token.auth_token)
 
     return jsonify({'message': 'success', 'auth_info': auth_token_schema.dump(new_token)}), 201

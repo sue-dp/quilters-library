@@ -3,8 +3,8 @@ import sys
 from db import db
 from models.users import Users
 from .user_demo_data import add_user_demo_data
-from .org_demo_data import add_org_demo_data
-from .role_demo_data import add_role_demo_data
+from .org_demo_data import *
+from .role_demo_data import *
 
 
 def run_demo_data():
@@ -16,5 +16,8 @@ def run_demo_data():
             add_user_demo_data()
             add_org_demo_data()
             add_role_demo_data()
+            add_users_to_orgs()
+            add_roles_to_org()
+
         else:
             print('Demo data found.')

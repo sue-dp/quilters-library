@@ -28,10 +28,10 @@ def user_add(req):
 def users_get_all(req, auth_info):
     users_query = db.session.query(Users).all()
 
-    if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-        return jsonify({'message': 'users found', 'users': users_schema.dump(users_query)}), 200
-    else:
-        return jsonify({'message': 'unauthorized'}), 401
+    # if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
+    return jsonify({'message': 'users found', 'users': users_schema.dump(users_query)}), 200
+    # else:
+    #     return jsonify({'message': 'unauthorized'}), 401
 
 
 @authenticate_return_auth

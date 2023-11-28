@@ -36,7 +36,7 @@ def organization_add_user(user_id):
     return controllers.organization_add_user(request, user_id)
 
 
-@organizations.route('organization/user-remove/<user_id>', methods=['DELETE'])
+@organizations.route('/organization/user-remove/<user_id>', methods=['DELETE'])
 def organization_remove_user(user_id):
     return controllers. organization_remove_user(request, user_id)
 
@@ -46,7 +46,7 @@ def organization_add_role(role_id):
     return controllers.organization_add_role(request, role_id)
 
 
-@organizations.route('organization/role-remove/<role_id>', methods=['DELETE'])
+@organizations.route('/organization/role-remove/<role_id>', methods=['DELETE'])
 def organization_remove_role(role_id):
     return controllers. organization_remove_role(request, role_id)
 
