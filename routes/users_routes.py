@@ -26,17 +26,17 @@ def users_get_by_org__id(org_id):
     return controllers.user_get_by_org_id(request, org_id)
 
 
-@users.route('user/delete/<user_id', methods={'DELETE'})
+@users.route('/user/delete/<user_id>', methods={'DELETE'})
 def user_delete_by_id(user_id):
     return controllers.user_delete_by_id(request, user_id)
 
 
-@users.route('user/<user_id>', methods=['PUT'])
+@users.route('/user/<user_id>', methods=['PUT'])
 def user_update(user_id):
     return controllers.user_update(request, user_id)
 
 
-@users.route('user/role/<org_id>/<role_id>', methods=['PATCH'])
+@users.route('/user/role/<org_id>/<role_id>', methods=['PATCH'])
 def user_role_update(org_id, role_id):
     return controllers.user_role_update(request, org_id, role_id)
 

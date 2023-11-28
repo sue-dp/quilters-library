@@ -19,7 +19,6 @@ class Quilts(db.Model):
     long_arm_quilter_url = db.Column(db.String())
     notes = db.Column(db.String())
     public = db.Column(db.Boolean(), nullable=False, default=True)
-    active = db.Column(db.Boolean(), nullable=False, default=True)
 
     images = db.relationship('Images', back_populates='quilt')
     user = db.relationship('Users', back_populates='quilts')
@@ -28,18 +27,17 @@ class Quilts(db.Model):
         self.user_id = user_id
         self.pattern_name = pattern_name
         self.public = public
-        self.active = active
 
     def get_new_quilt():
-        return Quilts('', '', True, True)
+        return Quilts('', '', True)
 
 
 class QuiltsSchema(ma.Schema):
     class Meta:
-        fields = ['quilt_id', 'user', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public', 'active', 'images']
+        fields = ['quilt_id', 'user', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public', 'images']
 
-    user = ma.fields.Nested('UsersSchema', many=False, exclude='quilts')
-    images = ma.fields.Nested('ImagesSchema', many=True, exclude='quilt')
+    user = ma.fields.Nested('UsersSchema', many=False, exclude=['quilts'])
+    images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
 
 
 quilt_schema = QuiltsSchema()

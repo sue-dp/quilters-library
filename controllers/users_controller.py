@@ -9,6 +9,7 @@ from models.images import Images, image_schema, images_schema
 from models.auth_tokens import AuthTokens
 from util.reflection import populate_object
 from lib.authenticate import authenticate_return_auth, authenticate
+from lib.helper_functions import users_org_check
 
 
 def user_add(req):
@@ -34,16 +35,18 @@ def users_get_all(req, auth_info):
 
 
 @authenticate_return_auth
-def user_get_by_id(req, user_id, auth_info):
+def user_get_by_id(req, auth_info):
+    user_id = auth_info.user_id
     user_query = db.session.query(Users).filter(Users.user_id == user_id).first()
 
     if user_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin' or user_id == auth_info.user.user_id:
-            # make a loop to check for org_id for admin
-            return jsonify({'message': 'user found', 'user': user_schema.dump(user_query)}), 200
+        # if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin' or user_id == auth_info.user.user_id:
+        # make a loop to check for org_id for admin
+        return jsonify({'message': 'user found', 'user': user_schema.dump(user_query)}), 200
+        print(users_org_check(user_id, auth_info))
 
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+        # else:
+        #     return jsonify({'message': 'unauthorized'}), 401
     else:
         return jsonify({'message': 'user not found'}), 404
 

@@ -3,6 +3,7 @@ import psycopg2
 
 from db import *
 from util.blueprints import register_blueprints
+from lib.demo_data.demo_data import run_demo_data
 
 
 app = Flask(__name__)
@@ -11,6 +12,8 @@ app = Flask(__name__)
 def create_all():
     with app.app_context():
         db.create_all()
+
+        run_demo_data()
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
