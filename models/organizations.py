@@ -4,7 +4,6 @@ import marshmallow as ma
 
 from db import db
 from .users_orgs_xref import users_orgs_xref
-from .roles_orgs_xref import roles_orgs_xref
 
 
 class Organizations(db.Model):
@@ -15,7 +14,7 @@ class Organizations(db.Model):
     active = db.Column(db.Boolean(), default=True, nullable=False)
 
     users = db.relationship('Users', secondary=users_orgs_xref, back_populates='organizations')
-    roles = db.relationship('Roles', secondary=roles_orgs_xref, back_populates='organizations')
+    roles = db.relationship('Roles', back_populates='organizations')
 
     def __init__(self, org_name, active):
         self.org_name = org_name
@@ -29,7 +28,7 @@ class OrganizationsSchema(ma.Schema):
     class Meta:
         fields = ['org_id', 'org_name', 'active', 'users', 'roles']
 
-    users = ma.fields.Nested('UsersSchema', many=True, exclude=['organizations'])
+    users = ma.fields.Nested('UsersSchema', many=True, only=['first_name', 'last_name', 'user_id'])
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['organizations'])
 
 

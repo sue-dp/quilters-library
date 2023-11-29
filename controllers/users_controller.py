@@ -26,17 +26,21 @@ def user_add(req):
 
 @authenticate_return_auth
 def users_get_all(req, auth_info):
+    print('test 1')
     users_query = db.session.query(Users).all()
-
+    print("test 2")
+    for user in users_query:
+        print(user.organizations)
     # if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
     return jsonify({'message': 'users found', 'users': users_schema.dump(users_query)}), 200
+
     # else:
     #     return jsonify({'message': 'unauthorized'}), 401
 
 
 @authenticate_return_auth
-def user_get_by_id(req, auth_info):
-    user_id = auth_info.user_id
+def user_get_by_id(req, user_id, auth_info):
+
     user_query = db.session.query(Users).filter(Users.user_id == user_id).first()
 
     if user_query:

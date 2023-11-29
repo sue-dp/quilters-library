@@ -5,6 +5,7 @@ import marshmallow as ma
 from db import db
 from .users_roles_xref import users_roles_xref
 from .users_orgs_xref import users_orgs_xref
+from .organizations import OrganizationsSchema
 
 
 class Users(db.Model):
@@ -36,10 +37,10 @@ class Users(db.Model):
 
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'organizations']
+        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'organizations', 'quilts', 'images']
 
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
-    organizations = ma.fields.Nested('OrganizationsSchema', many=True, exclude=['users'])
+    organizations = ma.fields.Nested('OrganizationsSchema', many=True, only=['org_id', 'org_name'])
     quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
     images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
 

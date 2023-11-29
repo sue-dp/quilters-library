@@ -15,9 +15,9 @@ def run_demo_data():
             print('Creating demo data...')
             add_user_demo_data()
             add_org_demo_data()
-            add_role_demo_data()
             add_users_to_orgs()
             add_roles_to_org()
+            add_roles_to_users()
 
         else:
             print('Demo data found.')
