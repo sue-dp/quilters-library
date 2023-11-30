@@ -2,21 +2,21 @@ import config
 from db import db
 from models.roles import Roles
 from models.users import Users
-from models.organizations import Organizations
+from models.groups import Groups
 
 
-def add_roles_to_org():
-    orgs = db.session.query(Organizations).all()
+def add_roles_to_group():
+    groups = db.session.query(Groups).all()
 
-    for org in orgs:
-        org_roles = db.session.query(Roles).filter(Roles.org_id == org.org_id).all()
+    for group in groups:
+        group_roles = db.session.query(Roles).filter(Roles.group_id == group.group_id).all()
 
-        if org_roles == []:
+        if group_roles == []:
             for role in config.roles:
                 role_name = role
-                org_id = org.org_id
+                group_id = group.group_id
 
-                new_role = Roles(role_name=role_name, active=True, org_id=org_id)
+                new_role = Roles(role_name=role_name, active=True, group_id=group_id)
 
                 db.session.add(new_role)
 
@@ -25,13 +25,13 @@ def add_roles_to_org():
 
 def add_roles_to_users():
 
-    for org in config.organizations:
-        org_data = db.session.query(Organizations).filter(Organizations.org_name == org).first()
+    for group in config.groups:
+        group_data = db.session.query(Groups).filter(Groups.group_name == group).first()
 
-        admin_role = db.session.query(Roles).filter(Roles.org_id == org_data.org_id).filter(Roles.role_name == 'admin').first()
-        user_role = db.session.query(Roles).filter(Roles.org_id == org_data.org_id).filter(Roles.role_name == 'user').first()
+        admin_role = db.session.query(Roles).filter(Roles.group_id == group_data.group_id).filter(Roles.role_name == 'admin').first()
+        user_role = db.session.query(Roles).filter(Roles.group_id == group_data.group_id).filter(Roles.role_name == 'user').first()
 
-        for user in org_data.users:
+        for user in group_data.users:
             user_roles = user.roles
             first_name = user.first_name
 

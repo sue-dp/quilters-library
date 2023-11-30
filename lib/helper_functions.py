@@ -4,23 +4,23 @@ from db import db
 
 from .authenticate import authenticate, authenticate_return_auth
 from models.users import Users
-from models.organizations import Organizations
+from models.groups import Groups
 from models.roles import Roles
 
 
 @authenticate_return_auth
-def users_org_check(user_id, auth_info):
+def users_group_check(user_id, auth_info):
     user_query = db.session.query(Users).filter(Users.user_id == user_id).first()
 
-    user_orgs = []
-    for org in user_query.organizations:
-        org_query = db.session.query(Organizations).filter(Organizations.org_id == org.org_id).first()
-        if org_query:
-            user_orgs.append(org_query.org_id)
+    user_groups = []
+    for group in user_query.groups:
+        group_query = db.session.query(Groups).filter(Groups.group_id == group.group_id).first()
+        if group_query:
+            user_groups.append(group_query.group_id)
         else:
-            return jsonify({'message': 'no organizations found'})
+            return jsonify({'message': 'no groups found'})
 
-    return user_orgs
+    return user_groups
 
 
 @authenticate_return_auth

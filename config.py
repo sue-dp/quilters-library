@@ -1,4 +1,4 @@
-org_name = "no_org"
+group_name = "super-group"
 
 su_first_name = "Super"
 su_last_name = "Admin"
@@ -14,7 +14,7 @@ users = [
     "Pam Tuft"
 ]
 
-organizations = [
+groups = [
     "Hobble Creek Quilt Group",
     "Fabric Mill Friends"
 ]

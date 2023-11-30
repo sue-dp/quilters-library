@@ -11,15 +11,15 @@ class Roles(db.Model):
 
     role_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_name = db.Column(db.String(), nullable=False)
+    group_id = db.Column(UUID(as_uuid=True), db.ForeignKey('Groups.group_id'), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
-    org_id = db.Column(UUID(as_uuid=True), db.ForeignKey('Organizations.org_id'), nullable=False)
 
     users = db.relationship('Users', secondary=users_roles_xref, back_populates='roles')
-    organizations = db.relationship('Organizations', back_populates='roles')
+    groups = db.relationship('Groups', back_populates='roles')
 
-    def __init__(self, role_name, org_id, active=True):
+    def __init__(self, role_name, group_id, active=True):
         self.role_name = role_name
-        self.org_id = org_id
+        self.group_id = group_id
         self.active = active
 
     def get_new_role():
@@ -28,10 +28,10 @@ class Roles(db.Model):
 
 class RolesSchema(ma.Schema):
     class Meta:
-        fields = ['role_id', 'role_name', 'org_id', 'active', 'users']
+        fields = ['role_id', 'role_name', 'group_id', 'active', 'users']
 
     users = ma.fields.Nested('UsersSchema', many=True, exclude=['roles'])
-    # organizations = ma.fields.Nested('OrganizationsSchema', many=True, exclude=['roles'])
+    # groups = ma.fields.Nested('GroupsSchema', many=True, exclude=['roles'])
 
 
 role_schema = RolesSchema()

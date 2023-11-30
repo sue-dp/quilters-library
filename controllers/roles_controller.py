@@ -2,7 +2,7 @@ from flask import jsonify
 
 from db import db
 from models.users import Users, user_schema, users_schema
-from models.organizations import Organizations, organization_schema, organizations_schema
+from models.groups import Groups, group_schema, groups_schema
 from models.roles import Roles, role_schema, roles_schema
 from models.quilts import Quilts, quilt_schema, quilts_schema
 from models.images import Images, image_schema, images_schema
@@ -28,10 +28,10 @@ def role_add(req, auth_info):
 def roles_get_all(req, auth_info):
     roles_query = db.session.query(Roles).all()
 
-    if auth_info.role.role == 'admin' or auth_info.role.role == 'super-admin':
-        return jsonify({'message': 'roles found', 'roles': roles_schema.dump(roles_query)}), 200
-    else:
-        return jsonify({'message': 'unauthorized'}), 401
+    # if auth_info.role.role == 'admin' or auth_info.role.role == 'super-admin':
+    return jsonify({'message': 'roles found', 'roles': roles_schema.dump(roles_query)}), 200
+    # else:
+    #     return jsonify({'message': 'unauthorized'}), 401
 
 
 @authenticate_return_auth
@@ -40,7 +40,7 @@ def role_get_by_id(req, role_id, auth_info):
 
     if role_query:
         if auth_info.role.role == 'admin' or auth_info.role.role == 'super-admin' or role_id == auth_info.role.role_id:
-            # make a loop to check for org_id for admin
+            # make a loop to check for group_id for admin
             return jsonify({'message': 'role found', 'role': role_schema.dump(role_query)}), 200
 
         else:
@@ -77,7 +77,7 @@ def role_update(req, role_id, auth_info):
 
     if role_query:
         if auth_info.role.role == 'admin' or auth_info.role.role == 'super-admin' or role_id == auth_info.role.role_id:
-            # make a loop to check for org_id
+            # make a loop to check for group_id
             populate_object(role_query, post_data)
 
             db.session.commit()

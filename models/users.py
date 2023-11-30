@@ -4,8 +4,8 @@ import marshmallow as ma
 
 from db import db
 from .users_roles_xref import users_roles_xref
-from .users_orgs_xref import users_orgs_xref
-from .organizations import OrganizationsSchema
+from .users_groups_xref import users_groups_xref
+from .groups import GroupsSchema
 
 
 class Users(db.Model):
@@ -19,7 +19,7 @@ class Users(db.Model):
     active = db.Column(db.Boolean(), default=True, nullable=False)
 
     roles = db.relationship('Roles', secondary=users_roles_xref, back_populates='users')
-    organizations = db.relationship('Organizations', secondary=users_orgs_xref, back_populates='users')
+    groups = db.relationship('Groups', secondary=users_groups_xref, back_populates='users')
     auth = db.relationship('AuthTokens', back_populates='user')
     # quilts = db.relationship('Quilts', back_populates='user')
     # images = db.relationship('Images', back_populates='uploader')
@@ -37,10 +37,10 @@ class Users(db.Model):
 
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'organizations']
+        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'groups']
 
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
-    organizations = ma.fields.Nested('OrganizationsSchema', many=True, only=['org_id', 'org_name'])
+    groups = ma.fields.Nested('GroupsSchema', many=True, only=['group_id', 'group_name'])
     # quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
     # images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
 
