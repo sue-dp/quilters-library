@@ -26,10 +26,10 @@ class Organizations(db.Model):
 
 class OrganizationsSchema(ma.Schema):
     class Meta:
-        fields = ['org_id', 'org_name', 'active', 'users', 'roles']
+        fields = ['org_id', 'org_name', 'active', 'users']
 
     users = ma.fields.Nested('UsersSchema', many=True, only=['first_name', 'last_name', 'user_id'])
-    roles = ma.fields.Nested('RolesSchema', many=True, exclude=['organizations'])
+    # roles = ma.fields.Nested('RolesSchema', many=True, exclude=['organizations'])
 
 
 organization_schema = OrganizationsSchema()

@@ -20,8 +20,8 @@ class Quilts(db.Model):
     notes = db.Column(db.String())
     public = db.Column(db.Boolean(), nullable=False, default=True)
 
-    images = db.relationship('Images', back_populates='quilt')
-    user = db.relationship('Users', back_populates='quilts')
+    # images = db.relationship('Images', back_populates='quilt')
+    # user = db.relationship('Users', back_populates='quilts')
 
     def __init__(self, user_id, pattern_name, public=True, active=True):
         self.user_id = user_id
@@ -34,10 +34,10 @@ class Quilts(db.Model):
 
 class QuiltsSchema(ma.Schema):
     class Meta:
-        fields = ['quilt_id', 'user', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public', 'images']
+        fields = ['quilt_id', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public']
 
-    user = ma.fields.Nested('UsersSchema', many=False, exclude=['quilts'])
-    images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
+    # user = ma.fields.Nested('UsersSchema', many=False, exclude=['quilts'])
+    # images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
 
 
 quilt_schema = QuiltsSchema()

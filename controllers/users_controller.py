@@ -29,8 +29,9 @@ def users_get_all(req, auth_info):
     print('test 1')
     users_query = db.session.query(Users).all()
     print("test 2")
-    for user in users_query:
-        print(user.organizations)
+    # for user in users_query:
+    #     print(user.organizations)
+    print("users   ", users_query)
     # if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
     return jsonify({'message': 'users found', 'users': users_schema.dump(users_query)}), 200
 

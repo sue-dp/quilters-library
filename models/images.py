@@ -13,8 +13,8 @@ class Images(db.Model):
     file_name = db.Column(db.String(), unique=True, nullable=False)
     uploader_id = db.Column(UUID(as_uuid=True), db.ForeignKey('Users.user_id'), nullable=False)
 
-    quilt = db.relationship('Quilts', back_populates='images')
-    uploader = db.relationship('Users', back_populates='images')
+    # quilt = db.relationship('Quilts', back_populates='images')
+    # uploader = db.relationship('Users', back_populates='images')
 
     def __init__(self, quilt_id, file_name, uploader_id):
         self.quilt_id = quilt_id
@@ -27,10 +27,10 @@ class Images(db.Model):
 
 class ImagesSchema(ma.Schema):
     class Meta:
-        fields = ['image_id', 'quilt', 'file_name', 'uploader']
+        fields = ['image_id', 'file_name']
 
-    quilt = ma.fields.Nested('QuiltsSchema', many=False, exclude=['images'])
-    uploader = ma.fields.Nested('UsersSchema', many=False, exclude=['images'])
+    # quilt = ma.fields.Nested('QuiltsSchema', many=False, exclude=['images'])
+    # uploader = ma.fields.Nested('UsersSchema', many=False, exclude=['images'])
 
 
 image_schema = ImagesSchema()

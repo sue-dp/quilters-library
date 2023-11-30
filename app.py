@@ -61,6 +61,7 @@ def create_all():
 
             db.session.add(record)
 
+            record.organizations.append(org_data)
             record.roles.append(role_query)
 
             db.session.commit()
@@ -77,16 +78,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://127.0.0.1:5432/quilters-li
 init_db(app, db)
 
 
-def create_tables():
-    with app.app_context():
-        print('creating tables...')
-        db.create_all()
-        print('tables created successfuly')
+# def create_tables():
+#     with app.app_context():
+#         print('creating tables...')
+#         db.create_all()
+#         print('tables created successfuly')
 
 
 register_blueprints(app)
 
 if __name__ == '__main__':
+    # create_tables()
     create_all()
-    create_tables()
     app.run(host='0.0.0.0', port='8086', debug=True)
