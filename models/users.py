@@ -20,7 +20,7 @@ class Users(db.Model):
 
     roles = db.relationship('Roles', secondary=users_roles_xref, back_populates='users')
     groups = db.relationship('Groups', secondary=users_groups_xref, back_populates='users')
-    auth = db.relationship('AuthTokens', back_populates='user')
+    auth = db.relationship('AuthTokens', back_populates='user', cascade='all,delete')
     # quilts = db.relationship('Quilts', back_populates='user')
     # images = db.relationship('Images', back_populates='uploader')
 

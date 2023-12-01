@@ -21,9 +21,9 @@ def user_get_by_id(user_id):
     return controllers.user_get_by_id(request, user_id)
 
 
-@users.route('/users/<group_id>', methods=['GET'])
+@users.route('/users/group/<group_id>', methods=['GET'])
 def users_get_by_group__id(group_id):
-    return controllers.user_get_by_group_id(request, group_id)
+    return controllers.users_get_by_group_id(request, group_id)
 
 
 @users.route('/user/delete/<user_id>', methods={'DELETE'})
@@ -36,9 +36,9 @@ def user_update(user_id):
     return controllers.user_update(request, user_id)
 
 
-@users.route('/user/role/<group_id>/<role_id>', methods=['PATCH'])
-def user_role_update(group_id, role_id):
-    return controllers.user_role_update(request, group_id, role_id)
+@users.route('/user/role/<user_id>', methods=['PATCH'])
+def user_role_update(user_id):
+    return controllers.user_role_update(request, user_id)
 
 
 @users.route('/user/activity/<user_id>', methods=['PATCH'])
