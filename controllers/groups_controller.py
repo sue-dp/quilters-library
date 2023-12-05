@@ -60,40 +60,30 @@ def group_delete_by_id(req, group_id, auth_info):
     super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
     group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
+    users_query = db.session.query(Users).all()
+    group_roles_query = db.session.query(Roles).filter(Roles.group_id == group_id).all()
+
+    group_users_list = []
+    for user in users_query:
+        if group_query in user.groups:
+            group_users_list.append(user)
 
     if super_role_query in auth_user_query.roles:
+        for user in group_users_list:
+            for group_role in group_roles_query:
+                if group_role in user.roles:
+                    user.roles.remove(group_role)
+
+        for role in group_roles_query:
+            db.session.delete(role)
+
         db.session.delete(group_query)
         db.session.commit()
 
         return jsonify({'message': 'group deleted'}), 200
 
-    for group in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
-        if group in auth_user_query.groups:
-            if admin_role_query in auth_user_query.roles:
-                db.session.delete(group_query)
-                db.session.commit()
-
-                return jsonify({'message': 'group deleted'}), 200
-
     else:
         return jsonify({'message': 'unauthorized'}), 401
-
-    # if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-
-    #     if group_query:
-    #         auth_tokens = db.session.query(AuthTokens).filter(AuthTokens.group_id == group_id).all()
-    #         for token in auth_tokens:
-    #             db.session.delete(token)
-    #         db.session.delete(group_query)
-    #         db.session.commit()
-
-    #         return jsonify({'message': 'record successfully deleted'}), 200
-
-    #     return jsonify({'message': 'group not found'}), 404
-
-    # else:
-    #     return jsonify({'message': 'unauthorized'}), 401
 
 
 @authenticate_return_auth
