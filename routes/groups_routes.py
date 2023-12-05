@@ -31,24 +31,24 @@ def group_update(group_id):
     return controllers.group_update(request, group_id)
 
 
-@groups.route('/group/user-add/<user_id>', methods=['POST'])
-def group_add_user(user_id):
-    return controllers.group_add_user(request, user_id)
+@groups.route('/group/user-add/<group_id>', methods=['POST'])
+def group_add_user(group_id):
+    return controllers.group_add_user(request, group_id)
 
 
-@groups.route('/group/user-remove/<user_id>', methods=['DELETE'])
-def group_remove_user(user_id):
-    return controllers. group_remove_user(request, user_id)
+@groups.route('/group/user-remove/<group_id>', methods=['POST'])
+def group_remove_user(group_id):
+    return controllers. group_remove_user(request, group_id)
 
 
-@groups.route('/group/role-add/<role_id>', methods=['POST'])
-def group_add_role(role_id):
-    return controllers.group_add_role(request, role_id)
+@groups.route('/group/role-add/<group_id>', methods=['POST'])
+def group_add_role(group_id):
+    return controllers.group_add_role(request, group_id)
 
 
-@groups.route('/group/role-remove/<role_id>', methods=['DELETE'])
-def group_remove_role(role_id):
-    return controllers. group_remove_role(request, role_id)
+@groups.route('/group/role-remove/<group_id>', methods=['DELETE'])
+def group_remove_role(group_id):
+    return controllers. group_remove_role(request, group_id)
 
 
 @groups.route('/group/activity/<group_id>', methods=['PATCH'])

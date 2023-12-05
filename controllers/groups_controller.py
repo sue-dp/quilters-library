@@ -1,11 +1,9 @@
 from flask import jsonify
 
 from db import db
-from models.users import Users, user_schema, users_schema
+from models.users import Users
 from models.groups import Groups, group_schema, groups_schema
-from models.roles import Roles, role_schema, roles_schema
-from models.quilts import Quilts, quilt_schema, quilts_schema
-from models.images import Images, image_schema, images_schema
+from models.roles import Roles
 from models.auth_tokens import AuthTokens
 from util.reflection import populate_object
 from lib.authenticate import authenticate_return_auth, authenticate
@@ -90,115 +88,94 @@ def group_delete_by_id(req, group_id, auth_info):
 def group_update(req, group_id, auth_info):
     post_data = req.form if req.form else req.json
 
+    auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
+    super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
 
     if group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            # make a loop to check for group_id
+        if super_role_query in auth_user_query.roles:
             populate_object(group_query, post_data)
 
             db.session.commit()
 
             return jsonify({'message': 'group updated', 'group': group_schema.dump(group_query)}), 200
 
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+        for group in auth_user_query.groups:
+            admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
+
+            if admin_role_query in auth_user_query.roles:
+                populate_object(group_query, post_data)
+
+                db.session.commit()
+
+                return jsonify({'message': 'group updated', 'group': group_schema.dump(group_query)}), 200
+
+            else:
+                return jsonify({'message': 'unauthorized'}), 401
 
     else:
         return jsonify({'message': 'group not found'}), 404
 
 
 @authenticate_return_auth
-def group_add_user(req, auth_info):
+def group_add_user(req, group_id, auth_info):
     post_data = req.form if req.form else req.json
-    group_id = auth_info.group.group_id
-    # group_id = make loop to get group_id
 
+    user_ids = post_data.get('users')
+
+    auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
+    super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    role_query = db.session.query(Roles).filter(Roles.role_id == role_id).first()
 
-    if group_query and group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            group_query.groups.append(group_query)
-            db.session.commit()
+    if group_query:
+        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group_id).filter(Roles.role_name == 'admin').first()
+        user_role_query = db.session.query(Roles).filter(Roles.group_id == group_id).filter(Roles.role_name == 'user').first()
 
-            return jsonify({'message': 'product added to group', 'group': group_schema.dump(group_query)}), 201
+        if super_role_query in auth_user_query.roles or admin_role_query in auth_user_query.roles:
+            for user in user_ids:
+                user_query = db.session.query(Users).filter(Users.user_id == user).first()
+                if user_query:
+                    group_query.users.append(user_query)
+                    user_query.roles.append(user_role_query)
 
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+                    db.session.commit()
+
+                    return jsonify({'message': 'group updated', 'group': group_schema.dump(group_query)}), 200
+
+                else:
+                    return jsonify({'message': 'unauthorized'}), 401
 
     else:
         return jsonify({'message': 'not found'}), 404
 
 
 @authenticate_return_auth
-def group_remove_user(req, auth_info):
+def group_remove_user(req, group_id, auth_info):
     post_data = req.form if req.form else req.json
-    group_id = auth_info.group.group_id
-    # group_id = make loop to get group_id
 
+    user_ids = post_data.get('users')
+
+    auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
+    super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    role_query = db.session.query(Roles).filter(Roles.role_id == role_id).first()
 
-    if group_query and group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            group_query.groups.append(group_query)
-            db.session.commit()
+    if group_query:
+        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group_id).filter(Roles.role_name == 'admin').first()
+        user_role_query = db.session.query(Roles).filter(Roles.group_id == group_id).filter(Roles.role_name == 'user').first()
 
-            return jsonify({'message': 'product added to group', 'group': group_schema.dump(group_query)}), 201
+        if super_role_query in auth_user_query.roles or admin_role_query in auth_user_query.roles:
+            for user in user_ids:
+                user_query = db.session.query(Users).filter(Users.user_id == user).first()
+                if user_query:
+                    user_query.roles.remove(user_role_query)
+                    group_query.users.remove(user_query)
 
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+                    db.session.commit()
 
-    else:
-        return jsonify({'message': 'not found'}), 404
+                    return jsonify({'message': 'group updated', 'group': group_schema.dump(group_query)}), 200
 
-
-@authenticate_return_auth
-def group_add_role(req, auth_info):
-    post_data = req.form if req.form else req.json
-    group_id = auth_info.group.group_id
-    # group_id = make loop to get group_id
-
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    role_query = db.session.query(Roles).filter(Roles.role_id == role_id).first()
-
-    if group_query and group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            group_query.groups.append(group_query)
-            db.session.commit()
-
-            return jsonify({'message': 'product added to group', 'group': group_schema.dump(group_query)}), 201
-
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
-
-    else:
-        return jsonify({'message': 'not found'}), 404
-
-
-@authenticate_return_auth
-def group_remove_role(req, auth_info):
-    post_data = req.form if req.form else req.json
-    group_id = auth_info.group.group_id
-    # group_id = make loop to get group_id
-
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
-    role_query = db.session.query(Roles).filter(Roles.role_id == role_id).first()
-
-    if group_query and group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            group_query.groups.append(group_query)
-            db.session.commit()
-
-            return jsonify({'message': 'product added to group', 'group': group_schema.dump(group_query)}), 201
-
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+                else:
+                    return jsonify({'message': 'unauthorized'}), 401
 
     else:
         return jsonify({'message': 'not found'}), 404
@@ -206,18 +183,28 @@ def group_remove_role(req, auth_info):
 
 @authenticate_return_auth
 def group_activity(req, group_id, auth_info):
+    auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
     group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
+    super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
 
-    if group_query:
-        if auth_info.user.role == 'admin' or auth_info.user.role == 'super-admin':
-            group_query.active = not group_query.active
+    if super_role_query in auth_user_query.roles:
+        group_query.active = not group_query.active
 
-            db.session.commit()
+        db.session.commit()
 
-            return jsonify({'message': 'group activity has been updated', 'group': group_schema.dump(group_query)}), 200
+        return jsonify({'message': 'group activity has been updated', 'group': group_schema.dump(group_query)}), 200
 
-        else:
-            return jsonify({'message': 'unauthorized'}), 401
+    for group in auth_user_query.groups:
+        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
+        if group in group_query.groups:
+            if admin_role_query in auth_user_query.roles:
+                group_query.active = not group_query.active
 
-    else:
-        return jsonify({'message': 'group not found'}), 404
+                db.session.commit()
+
+                return jsonify({'message': 'group activity has been updated', 'group': group_schema.dump(group_query)}), 200
+
+            else:
+                return jsonify({'message': 'unauthorized'}), 401
+
+    return jsonify({'message': 'group not found'}), 404
