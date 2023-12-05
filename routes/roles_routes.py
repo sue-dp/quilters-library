@@ -16,6 +16,11 @@ def roles_get_all():
     return controllers.roles_get_all(request)
 
 
+@roles.route('/roles/<group_id>', methods=['GET'])
+def roles_get_by_group_id(group_id):
+    return controllers.roles_get_by_group_id(request, group_id)
+
+
 @roles.route('/role/<role_id>', methods=['GET'])
 def role_get_by_id(role_id):
     return controllers.role_get_by_id(request, role_id)
