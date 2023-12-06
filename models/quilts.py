@@ -21,22 +21,22 @@ class Quilts(db.Model):
     public = db.Column(db.Boolean(), nullable=False, default=True)
 
     # images = db.relationship('Images', back_populates='quilt')
-    # user = db.relationship('Users', back_populates='quilts')
+    user = db.relationship('Users', back_populates='quilts')
 
     def __init__(self, user_id, pattern_name, public=True, active=True):
         self.user_id = user_id
         self.pattern_name = pattern_name
         self.public = public
 
-    def get_new_quilt():
-        return Quilts('', '', True)
+    def get_new_quilt(user_id):
+        return Quilts(user_id, '', True)
 
 
 class QuiltsSchema(ma.Schema):
     class Meta:
-        fields = ['quilt_id', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public']
+        fields = ['quilt_id', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public', 'user']
 
-    # user = ma.fields.Nested('UsersSchema', many=False, exclude=['quilts'])
+    user = ma.fields.Nested('UsersSchema', many=False, only=['user_id', 'first_name', 'last_name'])
     # images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
 
 

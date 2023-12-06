@@ -21,7 +21,7 @@ class Users(db.Model):
     roles = db.relationship('Roles', secondary=users_roles_xref, back_populates='users')
     groups = db.relationship('Groups', secondary=users_groups_xref, back_populates='users')
     auth = db.relationship('AuthTokens', back_populates='user', cascade='all,delete')
-    # quilts = db.relationship('Quilts', back_populates='user')
+    quilts = db.relationship('Quilts', back_populates='user')
     # images = db.relationship('Images', back_populates='uploader')
 
     def __init__(self, first_name, last_name, email, password, active=True):
@@ -37,11 +37,11 @@ class Users(db.Model):
 
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'groups']
+        fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'groups', 'quilts']
 
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
     groups = ma.fields.Nested('GroupsSchema', many=True, only=['group_id', 'group_name'])
-    # quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
+    quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
     # images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
 
 

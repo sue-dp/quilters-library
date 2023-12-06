@@ -6,5 +6,5 @@ def register_blueprints(app):
     app.register_blueprint(routes.users)
     app.register_blueprint(routes.groups)
     app.register_blueprint(routes.roles)
-    # app.register_blueprint(routes.quilts)
+    app.register_blueprint(routes.quilts)
     # app.register_blueprint(routes.images)
