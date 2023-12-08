@@ -22,7 +22,7 @@ class Users(db.Model):
     groups = db.relationship('Groups', secondary=users_groups_xref, back_populates='users')
     auth = db.relationship('AuthTokens', back_populates='user', cascade='all,delete')
     quilts = db.relationship('Quilts', back_populates='user')
-    # images = db.relationship('Images', back_populates='uploader')
+    images = db.relationship('Images', back_populates='uploader')
 
     def __init__(self, first_name, last_name, email, password, active=True):
         self.first_name = first_name
@@ -42,7 +42,7 @@ class UsersSchema(ma.Schema):
     roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
     groups = ma.fields.Nested('GroupsSchema', many=True, only=['group_id', 'group_name'])
     quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
-    # images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
+    images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
 
 
 user_schema = UsersSchema()

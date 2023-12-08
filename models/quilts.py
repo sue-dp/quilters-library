@@ -20,7 +20,7 @@ class Quilts(db.Model):
     notes = db.Column(db.String())
     public = db.Column(db.Boolean(), nullable=False, default=True)
 
-    # images = db.relationship('Images', back_populates='quilt')
+    images = db.relationship('Images', back_populates='quilt')
     user = db.relationship('Users', back_populates='quilts')
 
     def __init__(self, user_id, pattern_name, public=True, active=True):
@@ -37,7 +37,7 @@ class QuiltsSchema(ma.Schema):
         fields = ['quilt_id', 'pattern_name', 'pattern_designer', 'pattern_url', 'fabric_line', 'quilting_type', 'long_arm_quilter', 'long_arm_quilter_url', 'notes', 'public', 'user']
 
     user = ma.fields.Nested('UsersSchema', many=False, only=['user_id', 'first_name', 'last_name'])
-    # images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
+    images = ma.fields.Nested('ImagesSchema', many=True, exclude=['quilt'])
 
 
 quilt_schema = QuiltsSchema()
