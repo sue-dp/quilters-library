@@ -8,8 +8,8 @@ import boto3
 from db import db
 from models.auth_tokens import AuthTokens
 
-key_id = os.getenv("PUBLIC_KEY_ID")
-app_key = os.getenv("PUBLIC_APP_KEY")
+key_id = os.getenv("KEY_ID")
+app_key = os.getenv("APP_KEY")
 s3_region = os.getenv("S3_REGION")
 s3_endpoint = os.getenv("S3_ENDPOINT")
 
