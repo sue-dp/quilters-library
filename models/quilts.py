@@ -23,7 +23,7 @@ class Quilts(db.Model):
     images = db.relationship('Images', back_populates='quilt')
     user = db.relationship('Users', back_populates='quilts')
 
-    def __init__(self, user_id, pattern_name, public=True, active=True):
+    def __init__(self, user_id, pattern_name, public=True):
         self.user_id = user_id
         self.pattern_name = pattern_name
         self.public = public

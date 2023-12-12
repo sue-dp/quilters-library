@@ -7,6 +7,7 @@ import config
 from models.groups import Groups
 from models.roles import Roles
 from models.users import Users
+from models.quilts import Quilts
 from util.blueprints import register_blueprints
 from lib.demo_data.demo_data import run_demo_data
 

@@ -14,7 +14,7 @@ class Groups(db.Model):
     active = db.Column(db.Boolean(), default=True, nullable=False)
 
     users = db.relationship('Users', secondary=users_groups_xref, back_populates='groups')
-    roles = db.relationship('Roles', back_populates='groups')
+    roles = db.relationship('Roles', back_populates='group')
 
     def __init__(self, group_name, active):
         self.group_name = group_name
@@ -26,10 +26,10 @@ class Groups(db.Model):
 
 class GroupsSchema(ma.Schema):
     class Meta:
-        fields = ['group_id', 'group_name', 'active', 'users']
+        fields = ['group_id', 'group_name', 'active', 'users', 'roles']
 
     users = ma.fields.Nested('UsersSchema', many=True, only=['first_name', 'last_name', 'user_id'])
-    # roles = ma.fields.Nested('RolesSchema', many=True, exclude=['groups'])
+    roles = ma.fields.Nested('RolesSchema', many=True, only=['role_id', 'role_name'])
 
 
 group_schema = GroupsSchema()

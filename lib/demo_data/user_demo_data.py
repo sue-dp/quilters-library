@@ -17,7 +17,7 @@ def add_user_demo_data():
             first_name = first_name
             last_name = last_name
             email = f'{first_name.lower()}{last_name.lower()}@test.com'
-            password = '1234'
+            password = 'Asdf1234!'
 
             new_password = generate_password_hash(password).decode('utf8')
 

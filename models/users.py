@@ -39,10 +39,10 @@ class UsersSchema(ma.Schema):
     class Meta:
         fields = ['user_id', 'first_name', 'last_name', 'email', 'active', 'roles', 'groups', 'quilts']
 
-    roles = ma.fields.Nested('RolesSchema', many=True, exclude=['users'])
+    roles = ma.fields.Nested('RolesSchema', many=True, only=['role_id', 'role_name'])
     groups = ma.fields.Nested('GroupsSchema', many=True, only=['group_id', 'group_name'])
-    quilts = ma.fields.Nested('Quilts', many=True, exclude=['user'])
-    images = ma.fields.Nested('Images', many=True, exclude=['uploader'])
+    quilts = ma.fields.Nested('QuiltsSchema', many=True, only=['quilt_id', 'pattern_name'])
+    images = ma.fields.Nested('ImagesSchema', many=True, only=['image_id'])
 
 
 user_schema = UsersSchema()

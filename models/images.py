@@ -11,7 +11,6 @@ class Images(db.Model):
     image_id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     quilt_id = db.Column(UUID(as_uuid=True), db.ForeignKey('Quilts.quilt_id'), nullable=False)
     file_name = db.Column(db.String(), unique=True, nullable=False)
-    # file_url = db.Column(db.String(), nullable=False)
     uploader_id = db.Column(UUID(as_uuid=True), db.ForeignKey('Users.user_id'), nullable=False)
 
     quilt = db.relationship('Quilts', back_populates='images')
@@ -20,7 +19,6 @@ class Images(db.Model):
     def __init__(self, quilt_id, file_name, uploader_id):
         self.quilt_id = quilt_id
         self.file_name = file_name
-        # self.file_url = file_url
         self.uploader_id = uploader_id
 
     def get_new_image(uploader_id):
@@ -29,9 +27,9 @@ class Images(db.Model):
 
 class ImagesSchema(ma.Schema):
     class Meta:
-        fields = ['image_id', 'file_name', 'uploader']
+        fields = ['image_id', 'quilt', 'file_name', 'uploader']
 
-    quilt = ma.fields.Nested('QuiltsSchema', many=False, exclude=['images'])
+    quilt = ma.fields.Nested('QuiltsSchema', many=False, only=['quilt_id', 'pattern_name'])
     uploader = ma.fields.Nested('UsersSchema', many=False, only=['user_id', 'first_name', 'last_name'])
 
 

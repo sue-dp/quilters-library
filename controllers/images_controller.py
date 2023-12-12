@@ -144,7 +144,7 @@ def images_get_all(req, s3_client, auth_info):
             for image in all_images:
                 image["url"] = s3_client.generate_presigned_url('get_object', Params={'Bucket': os.getenv("KEY_NAME"), 'Key': image["file_name"]})
 
-                return jsonify({'message': 'images found', 'images': all_images}), 200
+            return jsonify({'message': 'images found', 'images': all_images}), 200
 
         else:
             return jsonify({'message': 'images not found'}), 400

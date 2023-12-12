@@ -1,6 +1,4 @@
 from db import db
-from sqlalchemy.dialects.postgresql import UUID
-import marshmallow as ma
 
 
 users_roles_xref = db.Table(

@@ -28,7 +28,6 @@ class AuthTokensSchema(ma.Schema):
         fields = ['auth_token', 'user_id', 'expiration', 'user']
 
     user = ma.fields.Nested(UsersSchema(only=('first_name', 'last_name', 'user_id')))
-# took out 'role' from only= ?????
 
 
 auth_token_schema = AuthTokensSchema()
