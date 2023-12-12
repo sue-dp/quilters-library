@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_bcrypt import generate_password_hash
+from flask_cors import CORS
 import psycopg2
 
 from db import *
@@ -87,6 +88,8 @@ init_db(app, db)
 
 
 register_blueprints(app)
+
+CORS(app)
 
 if __name__ == '__main__':
     # create_tables()

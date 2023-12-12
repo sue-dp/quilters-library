@@ -10,12 +10,18 @@ from models.users import Users
 def auth_token_add(req):
     post_data = req.form if req.form else req.json
 
+    post_data = {
+        "email": post_data[0],
+        "password": post_data[1]
+    }
+
     fields = ['email', 'password']
     req_fields = ['email', 'password']
 
     values = {}
 
     for field in fields:
+        print('field: ', post_data)
         field_data = post_data.get(field)
         values[field] = field_data
 
