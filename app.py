@@ -5,7 +5,7 @@ import psycopg2
 
 from db import *
 import config
-from models.groups import Groups
+from models.organizations import Organizations
 from models.roles import Roles
 from models.users import Users
 from models.quilts import Quilts
@@ -20,32 +20,32 @@ def create_all():
     with app.app_context():
         db.create_all()
 
-        print(f"Querying for {config.group_name} group...")
-        group_data = db.session.query(Groups).filter(Groups.group_name == config.group_name).first()
+        print(f"Querying for {config.organization_name} organization...")
+        organization_data = db.session.query(Organizations).filter(Organizations.organization_name == config.organization_name).first()
 
-        if group_data == None:
-            print(f"{config.group_name} group not found. Creating {config.group_name} Group in database...")
-            group_data = Groups(group_name=config.group_name, active=True)
+        if organization_data == None:
+            print(f"{config.organization_name} organization not found. Creating {config.organization_name} Organization in database...")
+            organization_data = Organizations(organization_name=config.organization_name, active=True)
 
-            db.session.add(group_data)
+            db.session.add(organization_data)
             db.session.commit()
 
         else:
-            print(f"{config.group_name} Group found!")
+            print(f"{config.organization_name} Organization found!")
 
-        print(f'Querying for Roles for {group_data.group_name}...')
-        role_data = db.session.query(Roles).filter(Roles.group_id == group_data.group_id).first()
+        print(f'Querying for Roles for {organization_data.organization_name}...')
+        role_data = db.session.query(Roles).filter(Roles.organization_id == organization_data.organization_id).first()
 
         if role_data == None:
-            print(f'Roles for {group_data.group_name} not found! Creating roles...')
+            print(f'Roles for {organization_data.organization_name} not found! Creating roles...')
 
-            role_data = Roles(role_name='super-admin', group_id=group_data.group_id, active=True)
+            role_data = Roles(role_name='super-admin', organization_id=organization_data.organization_id, active=True)
 
             db.session.add(role_data)
             db.session.commit()
 
         else:
-            print(f'Found {group_data.group_name} Roles!')
+            print(f'Found {organization_data.organization_name} Roles!')
 
         su_name = f'{config.su_first_name} {config.su_last_name}'
         print(f"Querying for {su_name} user...")
@@ -63,7 +63,7 @@ def create_all():
 
             db.session.add(record)
 
-            record.groups.append(group_data)
+            record.organizations.append(organization_data)
             record.roles.append(role_query)
 
             db.session.commit()

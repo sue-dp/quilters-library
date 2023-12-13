@@ -3,7 +3,7 @@ from flask import jsonify
 from db import db
 from models.quilts import Quilts, quilt_schema, quilts_schema
 from models.users import Users
-from models.groups import Groups
+from models.organizations import Organizations
 from models.roles import Roles
 from models.auth_tokens import AuthTokens
 from util.reflection import populate_object
@@ -43,7 +43,7 @@ def quilts_get_all(req, auth_info):
 def quilt_get_by_id(req, quilt_id, auth_info):
     auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
     super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
-    group_query = db.session.query(Groups).all()
+    organization_query = db.session.query(Organizations).all()
 
     quilt_query = db.session.query(Quilts).filter(Quilts.quilt_id == quilt_id).first()
 
@@ -53,8 +53,8 @@ def quilt_get_by_id(req, quilt_id, auth_info):
     if super_role_query in auth_user_query.roles:
         return jsonify({'message': 'quilt found', 'quilt': quilt_schema.dump(quilt_query)}), 200
 
-    if group_query in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == Users.group_id).filter(Roles.role_name == 'admin').first()
+    if organization_query in auth_user_query.organizations:
+        admin_role_query = db.session.query(Roles).filter(Roles.organization_id == Users.organization_id).filter(Roles.role_name == 'admin').first()
         if admin_role_query:
             return jsonify({'message': 'quilt found', 'quilt': quilt_schema.dump(quilt_query)}), 200
 
@@ -66,7 +66,7 @@ def quilt_get_by_id(req, quilt_id, auth_info):
 def quilts_get_by_user(req, user_id, auth_info):
     auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
     super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
-    group_query = db.session.query(Groups).all()
+    organization_query = db.session.query(Organizations).all()
 
     quilts_query = db.session.query(Quilts).filter(Quilts.user_id == user_id).all()
 
@@ -76,9 +76,9 @@ def quilts_get_by_user(req, user_id, auth_info):
     if super_role_query in auth_user_query.roles:
         return jsonify({'message': 'quilts found', 'quilts': quilts_schema.dump(quilts_query)}), 200
 
-    for group in group_query:
-        if group in auth_user_query.groups:
-            admin_role_query = db.session.query(Roles).filter(Roles.group_id == Users.group_id).filter(Roles.role_name == 'admin').first()
+    for organization in organization_query:
+        if organization in auth_user_query.organizations:
+            admin_role_query = db.session.query(Roles).filter(Roles.organization_id == Users.organization_id).filter(Roles.role_name == 'admin').first()
             if admin_role_query:
                 return jsonify({'message': 'quilts found', 'quilts': quilts_schema.dump(quilts_query)}), 200
 

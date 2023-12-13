@@ -2,7 +2,7 @@ from flask import jsonify
 
 from db import db
 from models.users import Users, user_schema, users_schema
-from models.groups import Groups
+from models.organizations import Organizations
 from models.roles import Roles
 from util.reflection import populate_object
 from lib.authenticate import authenticate_return_auth
@@ -46,9 +46,9 @@ def user_get_by_id(req, user_id, auth_info):
     if super_role_query in auth_user_query.roles:
         return jsonify({'message': 'user found', 'user': user_schema.dump(user_query)}), 200
 
-    for group in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
-        if group in user_query.groups:
+    for organization in auth_user_query.organizations:
+        admin_role_query = db.session.query(Roles).filter(Roles.organization_id == organization.organization_id).filter(Roles.role_name == 'admin').first()
+        if organization in user_query.organizations:
             if admin_role_query in auth_user_query.roles:
                 return jsonify({'message': 'user found', 'user': user_schema.dump(user_query)}), 200
 
@@ -59,18 +59,18 @@ def user_get_by_id(req, user_id, auth_info):
 
 
 @authenticate_return_auth
-def users_get_by_group_id(req, group_id, auth_info):
+def users_get_by_organization_id(req, organization_id, auth_info):
     auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
-    group_query = db.session.query(Groups).filter(Groups.group_id == group_id).first()
+    organization_query = db.session.query(Organizations).filter(Organizations.organization_id == organization_id).first()
     users_query = db.session.query(Users).all()
     super_role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     users_list = []
 
     for user in users_query:
-        if group_query in user.groups:
+        if organization_query in user.organizations:
             users_list.append(user)
 
-    if group_query in auth_user_query.groups or super_role_query in auth_user_query.roles:
+    if organization_query in auth_user_query.organizations or super_role_query in auth_user_query.roles:
         return jsonify({'message': 'users found', 'users': users_schema.dump(users_list)}), 200
 
     else:
@@ -121,9 +121,9 @@ def user_update(req, user_id, auth_info):
 
         return jsonify({'message': 'user updated', 'user': user_schema.dump(user_query)}), 200
 
-    for group in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
-        if group in user_query.groups:
+    for organization in auth_user_query.organizations:
+        admin_role_query = db.session.query(Roles).filter(Roles.organization_id == organization.organization_id).filter(Roles.role_name == 'admin').first()
+        if organization in user_query.organizations:
             if admin_role_query in auth_user_query.roles:
                 populate_object(user_query, post_data)
             else:
@@ -157,9 +157,9 @@ def user_role_update(req, user_id, auth_info):
 
         return jsonify({'message': 'user roles updated', 'user': user_schema.dump(user_query)}), 200
 
-    for group in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
-        if group in user_query.groups:
+    for organization in auth_user_query.organizations:
+        admin_role_query = db.session.query(Roles).filter(Roles.organization_id == organization.organization_id).filter(Roles.role_name == 'admin').first()
+        if organization in user_query.organizations:
             if admin_role_query in auth_user_query.roles:
                 if role_query not in user_query.roles:
                     user_query.roles.append(role_query)
@@ -189,9 +189,9 @@ def user_activity(req, user_id, auth_info):
 
         return jsonify({'message': 'user activity has been updated', 'user': user_schema.dump(user_query)}), 200
 
-    for group in auth_user_query.groups:
-        admin_role_query = db.session.query(Roles).filter(Roles.group_id == group.group_id).filter(Roles.role_name == 'admin').first()
-        if group in user_query.groups:
+    for organization in auth_user_query.organizations:
+        admin_role_query = db.session.query(Roles).filter(Roles.organization_id == organization.organization_id).filter(Roles.role_name == 'admin').first()
+        if organization in user_query.organizations:
             if admin_role_query in auth_user_query.roles:
                 user_query.active = not user_query.active
 

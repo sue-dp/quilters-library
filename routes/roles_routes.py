@@ -16,9 +16,9 @@ def roles_get_all():
     return controllers.roles_get_all(request)
 
 
-@roles.route('/roles/<group_id>', methods=['GET'])
-def roles_get_by_group_id(group_id):
-    return controllers.roles_get_by_group_id(request, group_id)
+@roles.route('/roles/<organization_id>', methods=['GET'])
+def roles_get_by_organization_id(organization_id):
+    return controllers.roles_get_by_organization_id(request, organization_id)
 
 
 @roles.route('/role/<role_id>', methods=['GET'])

@@ -21,9 +21,9 @@ def user_get_by_id(user_id):
     return controllers.user_get_by_id(request, user_id)
 
 
-@users.route('/users/group/<group_id>', methods=['GET'])
-def users_get_by_group__id(group_id):
-    return controllers.users_get_by_group_id(request, group_id)
+@users.route('/users/organization/<organization_id>', methods=['GET'])
+def users_get_by_organization__id(organization_id):
+    return controllers.users_get_by_organization_id(request, organization_id)
 
 
 @users.route('/user/delete/<user_id>', methods={'DELETE'})

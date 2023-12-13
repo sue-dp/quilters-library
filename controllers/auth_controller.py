@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 
 from db import db
 from models.auth_tokens import AuthTokens, auth_token_schema
-from models.users import Users
+from models.users import Users, user_schema
+from lib.authenticate import authenticate_return_auth
 
 
 def auth_token_add(req):
@@ -54,3 +55,11 @@ def auth_token_add(req):
     print("new_token: ", new_token.auth_token)
 
     return jsonify({'message': 'success', 'auth_info': auth_token_schema.dump(new_token)}), 201
+
+
+@authenticate_return_auth
+def auth_check_login(req, auth_info):
+    user_data = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
+    print(user_data)
+
+    return jsonify({"message": "success", "results": {"auth_info": auth_token_schema.dump(auth_info), "user_info": user_schema.dump(user_data)}}), 200

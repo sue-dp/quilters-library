@@ -1,7 +1,7 @@
 import os
 
 
-group_name = "super-group"
+organization_name = "super-organization"
 
 su_first_name = "Super"
 su_last_name = "Admin"
@@ -17,8 +17,8 @@ users = [
     "Pam Tuft"
 ]
 
-groups = [
-    "Hobble Creek Quilt Group",
+organizations = [
+    "Hobble Creek Quilt Organization",
     "Fabric Mill Friends"
 ]
 

@@ -3,7 +3,7 @@ import sys
 from db import db
 from models.users import Users
 from .user_demo_data import add_user_demo_data
-from .groups_demo_data import *
+from .organizations_demo_data import *
 from .role_demo_data import *
 
 
@@ -14,9 +14,9 @@ def run_demo_data():
         if user_query == None:
             print('Creating demo data...')
             add_user_demo_data()
-            add_group_demo_data()
-            add_users_to_groups()
-            add_roles_to_group()
+            add_organization_demo_data()
+            add_users_to_organizations()
+            add_roles_to_organization()
             add_roles_to_users()
 
         else:
