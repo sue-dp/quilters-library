@@ -18,6 +18,7 @@ def organizations_get_all():
 
 @organizations.route('/organization/<organization_id>', methods=['GET'])
 def organization_get_by_id(organization_id):
+    print("hi")
     return controllers.organization_get_by_id(request, organization_id)
 
 

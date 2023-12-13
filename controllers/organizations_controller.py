@@ -24,6 +24,7 @@ def organization_add(req):
 
 @authenticate_return_auth
 def organizations_get_all(req, auth_info):
+    print("auth: ", auth_info)
     role_query = db.session.query(Roles).filter(Roles.role_name == 'super-admin').first()
     auth_user_query = db.session.query(Users).filter(Users.user_id == auth_info.user_id).first()
 
@@ -44,10 +45,10 @@ def organization_get_by_id(req, organization_id, auth_info):
     organization_query = db.session.query(Organizations).filter(Organizations.organization_id == organization_id).first()
 
     if super_role_query in auth_user_query.roles:
-        return jsonify({'message': 'organization found', 'user': organization_schema.dump(organization_query)}), 200
+        return jsonify({'message': 'organization found', 'organization': organization_schema.dump(organization_query)}), 200
 
     if organization_query in auth_user_query.organizations:
-        return jsonify({'message': 'organization found', 'user': organization_schema.dump(organization_query)}), 200
+        return jsonify({'message': 'organization found', 'organization': organization_schema.dump(organization_query)}), 200
 
     else:
         return jsonify({'message': 'unauthorized'}), 401

@@ -5,6 +5,7 @@ from models.users import Users
 from .user_demo_data import add_user_demo_data
 from .organizations_demo_data import *
 from .role_demo_data import *
+from .quilt_demo_data import add_quilt_demo_data
 
 
 def run_demo_data():
@@ -18,6 +19,7 @@ def run_demo_data():
             add_users_to_organizations()
             add_roles_to_organization()
             add_roles_to_users()
+            add_quilt_demo_data()
 
         else:
             print('Demo data found.')

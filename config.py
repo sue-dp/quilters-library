@@ -27,6 +27,14 @@ roles = [
     "user"
 ]
 
+quilts = [
+    'Sparrows',
+    'Lone Star',
+    'Bountiful Blessings',
+    'Chandelier',
+    'Ohio Star'
+]
+
 s3_region = os.getenv("S3_REGION")
 s3_endpoint = os.getenv("S3_ENDPOINT")
 s3_public_bucket = os.getenv("PUBLIC_BUCKET")

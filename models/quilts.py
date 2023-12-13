@@ -23,13 +23,15 @@ class Quilts(db.Model):
     images = db.relationship('Images', back_populates='quilt')
     user = db.relationship('Users', back_populates='quilts')
 
-    def __init__(self, user_id, pattern_name, public=True):
+    def __init__(self, user_id, pattern_name, fabric_line, pattern_designer, public=True):
         self.user_id = user_id
         self.pattern_name = pattern_name
+        self.fabric_line = fabric_line
+        self.pattern_designer = pattern_designer
         self.public = public
 
     def get_new_quilt(user_id):
-        return Quilts(user_id, '', True)
+        return Quilts(user_id, '', '', '', True)
 
 
 class QuiltsSchema(ma.Schema):
